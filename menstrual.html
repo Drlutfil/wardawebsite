@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>KALENDAR HAID</title>
+    <style>
+      /* Tema moden (seragam dengan projek) */
+      :root {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --accent: #ad1457;
+        --accent-strong: #880e4f;
+        --ok: #16a34a;
+        --danger: #dc2626;
+        --info: #2563eb;
+      }
+      body {
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        background: var(--bg);
+        margin: 0;
+        color: #0f172a;
+      }
+      .navbar {
+        background: var(--accent);
+        padding: 12px 18px;
+        display: flex;
+        gap: 18px;
+        justify-content: center;
+        align-items: center;
+      }
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 18px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 8px 24px rgba(12, 25, 60, 0.06);
+      }
+      h1 {
+        margin: 0 0 10px;
+        color: var(--accent-strong);
+        font-size: 22px;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* Survey */
+      .survey .q {
+        margin: 12px 0;
+      }
+      .choices {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+      .choice {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #e6eefa;
+        background: #f8fbff;
+        cursor: pointer;
+        user-select: none;
+      }
+      .choice.selected {
+        background: var(--info);
+        color: white;
+        border-color: var(--info);
+        font-weight: 700;
+      }
+
+      /* calendar grid */
+      .calendar-wrap {
+        margin-top: 16px;
+      }
+      .calendar-controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      select,
+      input[type="number"] {
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #e6eefc;
+        background: #fbfdff;
+      }
+      .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+      }
+      .day {
+        background: linear-gradient(180deg, #fff, #fbfdff);
+        padding: 10px;
+        border-radius: 10px;
+        min-height: 78px;
+        position: relative;
+        border: 1px solid #eef2ff;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .day .date {
+        font-weight: 700;
+      }
+      .header {
+        background: #f1f5f9;
+        padding: 8px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 700;
+      }
+      .marker {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 10px rgba(2, 6, 23, 0.08);
+      }
+
+      /* popup */
+      #overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.45);
+        display: none;
+        z-index: 90;
+      }
+      .popup {
+        position: fixed;
+        left: 50%;
+        top: 12%;
+        transform: translateX(-50%);
+        width: 380px;
+        background: var(--card);
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 12px 36px rgba(2, 6, 23, 0.14);
+        z-index: 100;
+        display: none;
+      }
+      .popup h3 {
+        margin: 0 0 8px;
+      }
+      .popup label {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .popup .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 8px 0;
+      }
+
+      /* buttons */
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      button.btn {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-save {
+        background: var(--ok);
+        color: #fff;
+      }
+      .btn-reset {
+        background: var(--danger);
+        color: #fff;
+      }
+      .btn-check {
+        background: #7c3aed;
+        color: #fff;
+      }
+
+      /* status */
+      .status-box {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 10px;
+        background: linear-gradient(180deg, #fff, #fbfbff);
+        border: 1px solid #eef2ff;
+      }
+      .status-line {
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+
+      @media (max-width: 700px) {
+        .popup {
+          width: 92%;
+        }
+        .calendar {
+          gap: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="index.html">Laman Utama</a>
+      <a href="option.html">Profil</a>
+      <a href="menstrual.html">Kalendar Haid</a>
+      <a href="history.html">Sejarah</a>
+      <a href="about.html">Tentang Kami</a>
+      <a href="video.html">Info</a>
+    </nav>
+
+    <div class="container">
+      <div class="card">
+        <h1>KALENDAR HAID</h1>
+        <div class="muted">
+          Sila jawab soalan pra-kalendar terlebih dahulu. Selepas itu anda boleh
+          menanda hari keluar darah pada kalendar.
+        </div>
+
+        <!-- SURVEY -->
+        <section id="survey" class="survey" style="margin-top: 12px">
+          <div class="q">
+            <label><strong>1. Adakah turun darah?</strong></label>
+            <div class="choices" id="q1">
+              <div
+                class="choice"
+                data-q="darah"
+                data-val="Ya"
+                onclick="pick(this)"
+              >
+                Ya
+              </div>
+              <div
+                class="choice"
+                data-q="darah"
+                data-val="Tidak"
+                onclick="pick(this)"
+              >
+                Tidak
+              </div>
+            </div>
+          </div>
+
+          <div id="fluidInfo" style="display: none; margin-top: 8px">
+            <label>Jika TIDAK - ada cecair / lelehan? Nyatakan:</label>
+            <input id="fluidText" placeholder="cth: keputihan, kuning..." />
+            <div class="muted" style="margin-top: 6px">
+              Nota: jika tidak normal, sila rujuk doktor.
+            </div>
+          </div>
+
+          <div
+            class="q"
+            id="qFirstWrap"
+            style="display: none; margin-top: 12px"
+          >
+            <label><strong>2. Adakah pertama kali keluar darah?</strong></label>
+            <div class="choices" id="q2">
+              <div
+                class="choice"
+                data-q="first"
+                data-val="Ya"
+                onclick="pick(this)"
+              >
+                Ya
+              </div>
+              <div
+                class="choice"
+                data-q="first"
+                data-val="Tidak"
+                onclick="pick(this)"
+              >
+                Tidak
+              </div>
+            </div>
+          </div>
+
+          <div id="firstAge" style="display: none; margin-top: 8px">
+            <label>Umur ketika pertama kali haid:</label>
+            <input
+              id="firstAgeInput"
+              type="number"
+              min="1"
+              placeholder="cth: 12"
+            />
+            <div class="muted">Jika ≥9 tahun, boleh rujuk pakar agama.</div>
+          </div>
+
+          <div id="adatWrap" style="display: none; margin-top: 8px">
+            <label>Berapa hari HAID sebelum ini? (Adat)</label>
+            <input id="adatInput" type="number" min="1" placeholder="cth: 7" />
+          </div>
+
+          <div class="q" id="qBezaWrap" style="display: none; margin-top: 12px">
+            <label><strong>3. Adakah boleh bezakan darah?</strong></label>
+            <div class="choices" id="q3">
+              <div
+                class="choice"
+                data-q="beza"
+                data-val="Ya"
+                onclick="pick(this)"
+              >
+                Ya
+              </div>
+              <div
+                class="choice"
+                data-q="beza"
+                data-val="Tidak Pasti"
+                onclick="pick(this)"
+              >
+                Tidak Pasti
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px">
+            <button class="btn btn-primary" onclick="finishSurvey()">
+              Selesai & Pergi ke Kalendar
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- CALENDAR (hidden until survey finished) -->
+      <div id="calendarArea" style="display: none; margin-top: 14px">
+        <div class="card">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <div>
+              <label class="muted">Pilih Bulan & Tahun</label>
+              <div style="display: flex; gap: 8px; margin-top: 6px">
+                <select id="monthSelect"></select>
+                <select id="yearSelect"></select>
+              </div>
+            </div>
+
+            <div style="text-align: right">
+              <div class="muted">
+                Klik tarikh untuk menambah/ubah rekod darah
+              </div>
+              <div style="margin-top: 8px">
+                <button class="btn btn-save" onclick="exportAll()">
+                  💾 Simpan Semua Data
+                </button>
+                <button class="btn btn-reset" onclick="resetAll()">
+                  🗑 Reset Semua Data
+                </button>
+                <button class="btn btn-check" onclick="computeStatus()">
+                  📋 Semak Status Darah
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="calendar-wrap" style="margin-top: 12px">
+            <div class="calendar" id="calendarGrid"></div>
+          </div>
+
+          <div
+            id="statusPanel"
+            class="status-box"
+            style="display: none; margin-top: 12px"
+          >
+            <div class="status-line">Keputusan (julatan tarikh):</div>
+            <div id="statusLines" class="muted"></div>
+            <div
+              id="qadaNote"
+              style="margin-top: 8px; color: var(--danger); font-weight: 700"
+            ></div>
+            <div style="margin-top: 8px; font-size: 13px">
+              <strong>Nota ringkas:</strong>
+              <ul style="margin: 6px 0 0 18px; padding: 0; color: var(--muted)">
+                <li><strong>HAID:</strong> Darah >24 jam dan ≤15 hari.</li>
+                <li>
+                  <strong>WAKTU SUCI:</strong> Minimum 15 hari bermula selepas
+                  HAID tamat.
+                </li>
+                <li>
+                  <strong>ISTIHADAH:</strong> Darah yang keluar selepas maksimum
+                  HAID (selepas tempoh HAID) dan jatuh dalam WAKTU SUCI — perlu
+                  qada' solat.
+                </li>
+                <li>
+                  WAKTU SUCI dan ISTIHADAH boleh bertindih (<em>overlap</em>)
+                  satu sama lain.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay + Popup -->
+    <div id="overlay"></div>
+    <div class="popup" id="popupBox" aria-hidden="true">
+      <h3 id="popupTitle">Tarikh</h3>
+
+      <label>Waktu Solat (boleh pilih lebih 1)</label>
+      <div class="row" style="margin: 6px 0">
+        <label
+          ><input class="prayer" type="checkbox" value="Fajr" /> Fajr</label
+        >
+        <label
+          ><input class="prayer" type="checkbox" value="Zuhr" /> Zuhr</label
+        >
+        <label><input class="prayer" type="checkbox" value="Asr" /> Asr</label>
+        <label
+          ><input class="prayer" type="checkbox" value="Maghrib" />
+          Maghrib</label
+        >
+        <label
+          ><input class="prayer" type="checkbox" value="Isha" /> Isha</label
+        >
+        <label style="margin-left: 6px"
+          ><input id="allPrayers" type="checkbox" /> Semua Waktu</label
+        >
+      </div>
+
+      <label>Jenis Pendarahan</label>
+      <select id="bleedingSelect">
+        <option value="">-- Pilih --</option>
+        <option>Tompok2</option>
+        <option>Pendarahan ringan</option>
+        <option>Pendarahan banyak</option>
+      </select>
+
+      <label>Warna Darah</label>
+      <select id="colorSelect">
+        <option value="">-- Pilih --</option>
+        <option>Merah hitam</option>
+        <option>Merah gelap</option>
+        <option>Merah cair</option>
+        <option>Kuning</option>
+        <option>Keruh</option>
+        <option>Tidak Pasti</option>
+      </select>
+
+      <div class="actions" style="justify-content: flex-end; margin-top: 12px">
+        <button class="btn btn-primary" onclick="saveDay()">Simpan</button>
+        <button class="btn btn-reset" onclick="closePopup()">Tutup</button>
+      </div>
+    </div>
+
+    <script>
+      /* ==========================
+   Util helpers
+   ========================== */
+      function addDays(d, n) {
+        const x = new Date(d);
+        x.setDate(x.getDate() + n);
+        return x;
+      }
+      function formatKey(d) {
+        return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
+      }
+      function parseKey(k) {
+        const p = k.split("-").map(Number);
+        return new Date(p[2], p[1] - 1, p[0]);
+      }
+      function daysDiff(a, b) {
+        return Math.round((a - b) / (1000 * 60 * 60 * 24));
+      }
+      function fmtLong(d) {
+        const months = [
+          "Januari",
+          "Februari",
+          "Mac",
+          "April",
+          "Mei",
+          "Jun",
+          "Julai",
+          "Ogos",
+          "September",
+          "Oktober",
+          "November",
+          "Disember",
+        ];
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+      }
+
+      /* ==========================
+   Survey logic
+   ========================== */
+      let survey = {}; // {darah, fluidText, first, firstAge, adat, beza}
+      function pick(el) {
+        const q = el.getAttribute("data-q"),
+          v = el.getAttribute("data-val");
+        // toggle selection among same q
+        document
+          .querySelectorAll(`.choice[data-q="${q}"]`)
+          .forEach((x) => x.classList.remove("selected"));
+        el.classList.add("selected");
+        survey[q] = v;
+
+        // show/hide dependent fields
+        if (q === "darah") {
+          if (v === "Tidak") {
+            document.getElementById("fluidInfo").style.display = "block";
+            document.getElementById("qFirstWrap").style.display = "none";
+            document.getElementById("firstAge").style.display = "none";
+            document.getElementById("adatWrap").style.display = "none";
+            document.getElementById("qBezaWrap").style.display = "none";
+          } else {
+            document.getElementById("fluidInfo").style.display = "none";
+            document.getElementById("qFirstWrap").style.display = "block";
+          }
+        }
+        if (q === "first") {
+          if (v === "Ya") {
+            document.getElementById("firstAge").style.display = "block";
+            document.getElementById("adatWrap").style.display = "none";
+            document.getElementById("qBezaWrap").style.display = "none";
+          } else {
+            document.getElementById("firstAge").style.display = "none";
+            document.getElementById("adatWrap").style.display = "block";
+            document.getElementById("qBezaWrap").style.display = "block";
+          }
+        }
+      }
+
+      /* finish survey, validate minimal fields */
+      function finishSurvey() {
+        if (!survey.darah) {
+          alert("Sila jawab: Adakah turun darah?");
+          return;
+        }
+        if (survey.darah === "Tidak") {
+          survey.fluidText = document.getElementById("fluidText").value || "";
+        } else {
+          if (!survey.first) {
+            alert("Sila jawab: Adakah pertama kali keluar darah?");
+            return;
+          }
+          if (survey.first === "Ya") {
+            survey.firstAge =
+              document.getElementById("firstAgeInput").value || "";
+          } else {
+            survey.adat = parseInt(
+              document.getElementById("adatInput").value || "0"
+            );
+          }
+          if (!survey.beza) {
+            alert("Sila jawab: Adakah boleh bezakan darah?");
+            return;
+          }
+        }
+        // save survey to localStorage
+        localStorage.setItem("survey", JSON.stringify(survey));
+        // show calendar
+        document.getElementById("survey").style.display = "none";
+        document.getElementById("calendarArea").style.display = "block";
+        initCalendar();
+      }
+
+      /* ==========================
+   Calendar: render + storage
+   ========================== */
+      const monthSelect = document.getElementById("monthSelect"),
+        yearSelect = document.getElementById("yearSelect"),
+        calendarGrid = document.getElementById("calendarGrid");
+      const popup = document.getElementById("popupBox"),
+        overlay = document.getElementById("overlay");
+      const colorSelect = document.getElementById("colorSelect"),
+        bleedingSelect = document.getElementById("bleedingSelect");
+      const allPrayersChk = document.getElementById("allPrayers");
+
+      let currentKey = null;
+
+      // populate month year
+      (function populateDatePickers() {
+        const now = new Date();
+        for (let m = 0; m < 12; m++) {
+          let o = document.createElement("option");
+          o.value = m;
+          o.textContent = [
+            "Januari",
+            "Februari",
+            "Mac",
+            "April",
+            "Mei",
+            "Jun",
+            "Julai",
+            "Ogos",
+            "September",
+            "Oktober",
+            "November",
+            "Disember",
+          ][m];
+          monthSelect.appendChild(o);
+        }
+        for (let y = now.getFullYear() - 3; y <= now.getFullYear() + 3; y++) {
+          let o = document.createElement("option");
+          o.value = y;
+          o.textContent = y;
+          yearSelect.appendChild(o);
+        }
+        monthSelect.value = now.getMonth();
+        yearSelect.value = now.getFullYear();
+        monthSelect.addEventListener("change", () => renderCalendar());
+        yearSelect.addEventListener("change", () => renderCalendar());
+      })();
+
+      function initCalendar() {
+        // if saved survey exists, load it
+        const s = localStorage.getItem("survey");
+        if (s) survey = JSON.parse(s);
+        renderCalendar();
+      }
+
+      function renderCalendar() {
+        calendarGrid.innerHTML = "";
+        const year = parseInt(yearSelect.value),
+          month = parseInt(monthSelect.value);
+        const headers = [
+          "Ahad",
+          "Isnin",
+          "Selasa",
+          "Rabu",
+          "Khamis",
+          "Jumaat",
+          "Sabtu",
+        ];
+        headers.forEach((h) => {
+          const hd = document.createElement("div");
+          hd.className = "header";
+          hd.textContent = h;
+          calendarGrid.appendChild(hd);
+        });
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        for (let i = 0; i < firstDay; i++) {
+          calendarGrid.appendChild(document.createElement("div"));
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+          const box = document.createElement("div");
+          box.className = "day";
+          const dateEl = document.createElement("div");
+          dateEl.className = "date";
+          dateEl.textContent = d;
+          box.appendChild(dateEl);
+          const key = `${d}-${month + 1}-${year}`;
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            try {
+              const rec = JSON.parse(raw);
+              if (rec && rec.color) {
+                const m = document.createElement("div");
+                m.className = "marker";
+                m.style.background = mapColor(rec.color);
+                box.appendChild(m);
+              }
+            } catch (e) {}
+          }
+          box.addEventListener("click", () => openPopupFor(key));
+          calendarGrid.appendChild(box);
+        }
+      }
+
+      /* map color text to color codes */
+      function mapColor(c) {
+        switch (c) {
+          case "Merah hitam":
+            return "#7b1f1f";
+          case "Merah gelap":
+            return "#b91c1c";
+          case "Merah cair":
+            return "#ff7b7b";
+          case "Kuning":
+            return "#f59e0b";
+          case "Keruh":
+            return "#6b7280";
+          case "Tidak Pasti":
+            return "#2563eb";
+          default:
+            return "#a78bfa";
+        }
+      }
+
+      /* Popup open/close */
+      function openPopupFor(key) {
+        currentKey = key;
+        document.getElementById("popupTitle").textContent = "Tarikh: " + key;
+        // reset fields
+        document
+          .querySelectorAll("#popupBox .prayer")
+          .forEach((cb) => (cb.checked = false));
+        allPrayersChk.checked = false;
+        bleedingSelect.value = "";
+        colorSelect.value = "";
+        // load if exists
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          try {
+            const r = JSON.parse(raw);
+            if (r.prayers)
+              document
+                .querySelectorAll("#popupBox .prayer")
+                .forEach((cb) => (cb.checked = r.prayers.includes(cb.value)));
+            if (r.bleeding) bleedingSelect.value = r.bleeding;
+            if (r.color) colorSelect.value = r.color;
+          } catch (e) {}
+        }
+        overlay.style.display = "block";
+        popup.style.display = "block";
+        popup.setAttribute("aria-hidden", "false");
+      }
+      function closePopup() {
+        overlay.style.display = "none";
+        popup.style.display = "none";
+        currentKey = null;
+      }
+
+      /* All prayers checkbox convenience */
+      allPrayersChk &&
+        allPrayersChk.addEventListener &&
+        allPrayersChk.addEventListener("change", () => {
+          document
+            .querySelectorAll("#popupBox .prayer")
+            .forEach((cb) => (cb.checked = allPrayersChk.checked));
+        });
+
+      /* Save a day's data to localStorage (key is "d-m-yyyy") */
+      function saveDay() {
+        if (!currentKey) return;
+        const prayers = Array.from(
+          document.querySelectorAll("#popupBox .prayer")
+        )
+          .filter((cb) => cb.checked)
+          .map((cb) => cb.value);
+        const bleeding = bleedingSelect.value;
+        const color = colorSelect.value;
+        if (!prayers.length && !bleeding && !color) {
+          // if empty, remove record after confirmation
+          if (
+            confirm(
+              "Tiada input — rekod untuk tarikh ini akan dipadam (jika wujud). Teruskan?"
+            )
+          ) {
+            localStorage.removeItem(currentKey);
+            closePopup();
+            renderCalendar();
+          }
+          return;
+        }
+        const rec = { prayers, bleeding, color };
+        localStorage.setItem(currentKey, JSON.stringify(rec));
+        closePopup();
+        renderCalendar();
+      }
+
+      /* Export all data (survey + daily records) as JSON */
+      function exportAll() {
+        const out = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k) out[k] = JSON.parse(localStorage.getItem(k));
+        }
+        const blob = new Blob([JSON.stringify(out, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "menstrual_export.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        alert("Data dieksport sebagai menstrual_export.json");
+      }
+
+      /* Reset all survey & date keys (confirm) */
+      function resetAll() {
+        if (!confirm("Padam semua rekod (soal selidik & tarikh)?")) return;
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (!k) continue;
+          if (k === "survey" || /^\d{1,2}-\d{1,2}-\d{4}$/.test(k))
+            keysToRemove.push(k);
+        }
+        keysToRemove.forEach((k) => localStorage.removeItem(k));
+        alert("Semua data dipadam.");
+        location.reload();
+      }
+
+      /* ==========================
+   Core algorithm: computeStatus
+   - Collect all date records, group into contiguous blocks
+   - For each block: process sequentially
+     * determine HAID initial days (≤15) according to survey & color patterns
+     * mark initial HAID days
+     * mark up to 15 days ISTIHADAH (if more blood remain)
+     * remaining after IST -> repeat loop (new HAID cycle)
+   - After HAID & IST marking: compute WAKTU SUCI ranges = each HAID end +1 .. +15
+   - Convert any HAID days inside WAKTU SUCI to ISTIHADAH (HAID cannot happen inside WAKTU SUCI)
+   - Enforce max 15 days IST contiguous: extra -> HAID
+   - Finally collect ranges (HAID/IST/WAKTU SUCI) and display
+   ========================== */
+
+      function getAllRecordsSorted() {
+        const arr = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(k)) {
+            try {
+              arr.push({
+                key: k,
+                date: parseKey(k),
+                rec: JSON.parse(localStorage.getItem(k)),
+              });
+            } catch (e) {}
+          }
+        }
+        arr.sort((a, b) => a.date - b.date);
+        return arr;
+      }
+
+      /* pattern helpers */
+      function isAlternating(colors) {
+        const filtered = colors.filter((c) => c && c !== "Tidak Pasti");
+        if (filtered.length < 4) return false;
+        const uniq = Array.from(new Set(filtered));
+        if (uniq.length !== 2) return false;
+        for (let i = 0; i < filtered.length; i++)
+          if (filtered[i] !== uniq[i % 2]) return false;
+        return true;
+      }
+      function firstChangeIdx(colors) {
+        const base = colors[0];
+        for (let i = 1; i < colors.length; i++)
+          if (colors[i] !== base) return i;
+        return -1;
+      }
+      function twoRunSplitIndex(colors) {
+        if (colors.length < 2) return -1;
+        const first = colors[0];
+        let idx = -1;
+        for (let i = 1; i < colors.length; i++) {
+          if (colors[i] !== first) {
+            idx = i;
+            break;
+          }
+        }
+        if (idx === -1) return -1;
+        for (let j = idx; j < colors.length; j++)
+          if (colors[j] !== colors[idx]) return -1;
+        return idx;
+      }
+
+      /* main computeStatus */
+      function computeStatus() {
+        const all = getAllRecordsSorted();
+        if (all.length === 0) {
+          alert("Tiada rekod darah. Sila tanda pada kalendar terlebih dahulu.");
+          return;
+        }
+
+        // map key->rec
+        const recMap = {};
+        all.forEach((x) => (recMap[x.key] = x.rec));
+
+        // build contiguous blocks of dates (consecutive days)
+        const blocks = [];
+        let i = 0;
+        while (i < all.length) {
+          let j = i;
+          while (
+            j + 1 < all.length &&
+            daysDiff(all[j + 1].date, all[j].date) === 1
+          )
+            j++;
+          blocks.push({
+            start: all[i].date,
+            end: all[j].date,
+            entries: all.slice(i, j + 1),
+          });
+          i = j + 1;
+        }
+
+        // resultMap dateKey => status ('HAID'|'ISTIHADAH'|'WAKTU SUCI')
+        const resultMap = {};
+
+        // load survey for decisions
+        const sv = JSON.parse(localStorage.getItem("survey") || "{}");
+
+        // process each block
+        for (const blk of blocks) {
+          // build days array (Date objects)
+          const days = [];
+          let cur = new Date(blk.start);
+          while (cur <= blk.end) {
+            days.push(new Date(cur));
+            cur = addDays(cur, 1);
+          }
+
+          let cursor = 0;
+          while (cursor < days.length) {
+            const remaining = days.length - cursor;
+            // colors slice for remaining
+            const colors = [];
+            for (let k = cursor; k < days.length; k++) {
+              const kkey = formatKey(days[k]);
+              const r = recMap[kkey];
+              colors.push(r && r.color ? r.color : "Tidak Pasti");
+            }
+
+            // determine initial HAID days (initialHaid)
+            let initialHaid = 0;
+            if (remaining <= 15) {
+              initialHaid = remaining;
+            } else {
+              // remaining > 15
+              if (sv.beza === "Ya") {
+                // priority rules:
+                // - if colors alternating and adat present => use adat
+                if (isAlternating(colors) && sv.adat && sv.adat > 0) {
+                  initialHaid = Math.min(parseInt(sv.adat), 15);
+                } else {
+                  // two-run split? (contiguous run of color A then color B)
+                  const split = twoRunSplitIndex(colors);
+                  if (split !== -1) {
+                    initialHaid = Math.min(split, 15);
+                  } else {
+                    // first change index if any
+                    const ch = firstChangeIdx(colors);
+                    if (ch !== -1) {
+                      // if ch <= adat and adat exists maybe use adat? based on spec: for alternating use adat; otherwise use change index
+                      if (sv.adat && sv.adat > 0 && isAlternating(colors))
+                        initialHaid = Math.min(parseInt(sv.adat), 15);
+                      else initialHaid = Math.min(ch, 15);
+                    } else {
+                      // fallback to adat if given, else 15
+                      initialHaid =
+                        sv.adat && sv.adat > 0
+                          ? Math.min(parseInt(sv.adat), 15)
+                          : 15;
+                    }
+                  }
+                }
+              } else {
+                // Tidak Pasti -> use adat if present else 15
+                initialHaid =
+                  sv.adat && sv.adat > 0 ? Math.min(parseInt(sv.adat), 15) : 15;
+              }
+            }
+
+            // ensure at least 1
+            if (initialHaid < 1) initialHaid = 1;
+
+            // mark HAID for initialHaid days
+            for (let k = 0; k < initialHaid && cursor + k < days.length; k++) {
+              const key = formatKey(days[cursor + k]);
+              resultMap[key] = "HAID";
+            }
+            const haidEndIdx = cursor + initialHaid - 1;
+            cursor = haidEndIdx + 1;
+
+            // if nothing left, done with this block
+            if (cursor >= days.length) break;
+
+            // Now mark ISTIHADAH up to max 15 days (from cursor)
+            const remainAfterHaid = days.length - cursor;
+            const istLen = Math.min(remainAfterHaid, 15);
+            for (let k = 0; k < istLen; k++) {
+              const key = formatKey(days[cursor + k]);
+              resultMap[key] = "ISTIHADAH";
+            }
+            cursor = cursor + istLen;
+            // if still remaining after IST (i.e., initial chunk > 15 + initialHaid) then the while loop continues - treat remaining as new HAID cycle
+          }
+        }
+
+        // compute WAKTU SUCI ranges from HAID segments (min 15 days starting day after HAID end)
+        let haidSegments = [];
+        // build haidSegments from resultMap
+        const allDateKeys = Object.keys(resultMap)
+          .map((k) => parseKey(k))
+          .sort((a, b) => a - b);
+        let p = 0;
+        while (p < allDateKeys.length) {
+          const k = formatKey(allDateKeys[p]);
+          if (resultMap[k] === "HAID") {
+            let q = p;
+            while (
+              q + 1 < allDateKeys.length &&
+              daysDiff(allDateKeys[q + 1], allDateKeys[q]) === 1 &&
+              resultMap[formatKey(allDateKeys[q + 1])] === "HAID"
+            )
+              q++;
+            haidSegments.push({
+              start: new Date(allDateKeys[p]),
+              end: new Date(allDateKeys[q]),
+            });
+            p = q + 1;
+          } else p++;
+        }
+
+        // create suci ranges and merge overlapping
+        let suciRanges = haidSegments.map((h) => ({
+          start: addDays(h.end, 1),
+          end: addDays(h.end, 15),
+        }));
+        function mergeRanges(arr) {
+          if (!arr.length) return [];
+          arr.sort((a, b) => a.start - b.start);
+          const out = [
+            { start: new Date(arr[0].start), end: new Date(arr[0].end) },
+          ];
+          for (let i = 1; i < arr.length; i++) {
+            const cur = arr[i];
+            if (addDays(out[out.length - 1].end, 1) >= cur.start) {
+              // overlap or contiguous
+              out[out.length - 1].end = new Date(
+                Math.max(out[out.length - 1].end, cur.end)
+              );
+            } else
+              out.push({ start: new Date(cur.start), end: new Date(cur.end) });
+          }
+          return out;
+        }
+        suciRanges = mergeRanges(suciRanges);
+
+        // Apply suci: any HAID day inside suci becomes ISTIHADAH (HAID cannot be inside WAKTU SUCI)
+        suciRanges.forEach((r) => {
+          let d = new Date(r.start);
+          while (d <= r.end) {
+            const key = formatKey(d);
+            if (resultMap[key] === "HAID") {
+              resultMap[key] = "ISTIHADAH";
+            } else if (!resultMap[key]) resultMap[key] = "WAKTU SUCI";
+            d = addDays(d, 1);
+          }
+        });
+
+        // Ensure ISTIHADAH contiguous runs do not exceed 15 days; if do -> convert extra to HAID
+        // Build sorted list of all keys
+        const finalKeys = Object.keys(resultMap)
+          .map((k) => parseKey(k))
+          .sort((a, b) => a - b);
+        let idx = 0;
+        while (idx < finalKeys.length) {
+          const k = formatKey(finalKeys[idx]);
+          if (resultMap[k] === "ISTIHADAH") {
+            let j = idx;
+            while (
+              j + 1 < finalKeys.length &&
+              daysDiff(finalKeys[j + 1], finalKeys[j]) === 1 &&
+              resultMap[formatKey(finalKeys[j + 1])] === "ISTIHADAH"
+            )
+              j++;
+            const runLen = daysDiff(finalKeys[j], finalKeys[idx]) + 1;
+            if (runLen > 15) {
+              // convert days after first 15 to HAID
+              const convStart = addDays(finalKeys[idx], 15);
+              let cur = new Date(convStart);
+              while (daysDiff(finalKeys[j], cur) >= 0) {
+                resultMap[formatKey(cur)] = "HAID";
+                cur = addDays(cur, 1);
+              }
+            }
+            idx = j + 1;
+          } else idx++;
+        }
+
+        // After conversions, recompute final ranges for display (HAID, ISTIHADAH, WAKTU SUCI)
+        const finalMapKeys = Object.keys(resultMap)
+          .map((k) => parseKey(k))
+          .sort((a, b) => a - b);
+        function collectRangesByStatus(status) {
+          const ranges = [];
+          let s = null,
+            e = null;
+          for (let t = 0; t < finalMapKeys.length; t++) {
+            const d = finalMapKeys[t];
+            const key = formatKey(d);
+            if (resultMap[key] === status) {
+              if (!s) s = new Date(d);
+              e = new Date(d);
+            } else {
+              if (s) {
+                ranges.push({ start: s, end: e });
+                s = null;
+                e = null;
+              }
+            }
+          }
+          if (s) ranges.push({ start: s, end: e });
+          return ranges;
+        }
+
+        const haidRanges = collectRangesByStatus("HAID");
+        const istRanges = collectRangesByStatus("ISTIHADAH");
+        const suciFinal = collectRangesByStatus("WAKTU SUCI");
+
+        // Format lines
+        const lines = [];
+        haidRanges.forEach((r) =>
+          lines.push(`HAID: ${fmtLong(r.start)} – ${fmtLong(r.end)}`)
+        );
+        istRanges.forEach((r) =>
+          lines.push(
+            `ISTIHADAH: ${fmtLong(r.start)} – ${fmtLong(
+              r.end
+            )} — darah muncul dalam WAKTU SUCI (perlu qada' solat)`
+          )
+        );
+        suciFinal.forEach((r) =>
+          lines.push(
+            `WAKTU SUCI (min 15 hari): ${fmtLong(r.start)} – ${fmtLong(r.end)}`
+          )
+        );
+
+        // show on UI
+        document.getElementById("statusLines").innerHTML = lines.length
+          ? lines.join("<br>")
+          : "Tiada status dikira untuk julat ini.";
+        // qada note if any ISTIHADAH present
+        document.getElementById("qadaNote").innerText = istRanges.length
+          ? "Nota: Terdapat tempoh ISTIHADAH — ANDA PERLU qada' solat bagi tempoh tersebut."
+          : "";
+        document.getElementById("statusPanel").style.display = "block";
+
+        // Optionally store computed historical ranges into localStorage 'menstrualHistory' for history page
+        // We'll push each haid/ist/suci range as records (simple)
+        let history = JSON.parse(
+          localStorage.getItem("menstrualHistory") || "[]"
+        );
+        // clear previous entries for overlapping times to avoid duplicates — simple approach: append with timestamp
+        const timestamp = new Date().toISOString();
+        const summary = {
+          computedAt: timestamp,
+          haid: haidRanges.map((r) => ({
+            start: r.start.toISOString(),
+            end: r.end.toISOString(),
+          })),
+          ist: istRanges.map((r) => ({
+            start: r.start.toISOString(),
+            end: r.end.toISOString(),
+          })),
+          suci: suciFinal.map((r) => ({
+            start: r.start.toISOString(),
+            end: r.end.toISOString(),
+          })),
+        };
+        history.push(summary);
+        localStorage.setItem("menstrualHistory", JSON.stringify(history));
+        alert("Semakan status selesai — lihat keputusan di bawah.");
+      }
+
+      /* Boot: if survey exists already, skip survey and show calendar */
+      (function boot() {
+        const s = localStorage.getItem("survey");
+        if (s) {
+          survey = JSON.parse(s);
+          document.getElementById("survey").style.display = "none";
+          document.getElementById("calendarArea").style.display = "block";
+          initCalendar();
+        }
+      })();
+    </script>
+  </body>
+</html>

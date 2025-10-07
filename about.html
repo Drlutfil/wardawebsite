@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tentang Kami - WARDA</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap");
+
+      /* Tema Umum */
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        color: #fff;
+        background: linear-gradient(135deg, #ff80ab, #ba68c8, #9575cd);
+        background-size: 300% 300%;
+        animation: gradientMove 12s ease infinite;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      @keyframes gradientMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Navigasi */
+      .navbar {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        padding: 16px;
+        background: rgba(173, 20, 87, 0.9);
+        font-weight: 600;
+        backdrop-filter: blur(8px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .navbar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        transition: color 0.3s ease;
+      }
+
+      .navbar a:hover,
+      .navbar a.active {
+        text-decoration: underline;
+        color: #ffeef3;
+      }
+
+      /* Kandungan */
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 50px 20px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 44px;
+        font-weight: 800;
+        color: #fff0f5;
+        margin-bottom: 20px;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .about-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 30px;
+        margin-top: 10px;
+        text-align: left;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        line-height: 1.8;
+        font-size: 17px;
+        color: #fff;
+      }
+
+      .about-card h2 {
+        color: #ffeef3;
+        border-bottom: 2px solid #ffb6c1;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+      }
+
+      .about-card ul {
+        margin-top: 10px;
+        padding-left: 20px;
+      }
+
+      .about-card li {
+        margin-bottom: 8px;
+      }
+
+      .highlight {
+        color: #ffebee;
+        font-weight: 600;
+      }
+
+      footer {
+        text-align: center;
+        padding: 16px;
+        background: rgba(173, 20, 87, 0.85);
+        color: white;
+        font-size: 14px;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 32px;
+        }
+
+        .about-card {
+          padding: 20px;
+          font-size: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <a href="index.html">Laman Utama</a>
+      <a href="option.html">Profil</a>
+      <a href="menstrual.html">Kalendar Haid</a>
+      <a href="history.html">Sejarah</a>
+      <a href="about.html" class="active">Tentang Kami</a>
+      <a href="video.html">Info</a>
+    </div>
+
+    <!-- Kandungan -->
+    <main>
+      <h1>Tentang <span class="highlight">WARDA</span></h1>
+
+      <div class="about-card">
+        <h2>🌸 Objektif WARDA</h2>
+        <p>
+          Aplikasi
+          <b>WARDA</b>
+          dibangunkan untuk membantu pengguna wanita memahami dan menguruskan
+          hukum fiqh berkaitan darah haid, nifas, istihadah serta ibadah dengan
+          lebih sistematik dan mesra pengguna.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <h2>💡 Ciri Utama</h2>
+        <ul>
+          <li>Merekod dan menjejak kitaran haid pengguna dengan tepat.</li>
+          <li>
+            Memberi panduan hukum berkaitan haid, istihadah dan waktu suci.
+          </li>
+          <li>
+            Menyediakan paparan <span class="highlight">sejarah solat</span> dan
+            status darah secara automatik.
+          </li>
+          <li>Mesra pengguna dengan reka bentuk moden dan intuitif.</li>
+        </ul>
+      </div>
+
+      <div class="about-card">
+        <h2>🤝 Pembangunan</h2>
+        <p>
+          Aplikasi ini dibangunkan oleh pelajar perubatan dengan bimbingan pakar
+          dalam bidang <b>perubatan klinikal</b> dan <b>fiqh wanita</b>. Ia
+          bertujuan menjadi platform pendidikan dan sokongan bagi wanita Muslim
+          dalam menjaga kesihatan dan ibadah harian.
+        </p>
+      </div>
+    </main>
+
+    <footer>© 2025 WARDA | “Track with ease, Pray with peace”</footer>
+  </body>
+</html>

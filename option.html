@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maklumat Peribadi - KALENDAR HAID WARDA</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap");
+
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        color: #fff;
+        background: linear-gradient(
+          135deg,
+          #ff80ab,
+          #f48fb1,
+          #ce93d8,
+          #ba68c8,
+          #ad1457
+        );
+        background-size: 300% 300%;
+        animation: bgMove 10s ease infinite;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      @keyframes bgMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        padding: 16px;
+        background: rgba(173, 20, 87, 0.85);
+        font-weight: 600;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .navbar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        transition: color 0.3s ease;
+      }
+
+      .navbar a:hover,
+      .navbar a.active {
+        text-decoration: underline;
+        color: #ffeef3;
+      }
+
+      main.container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px 30px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(8px);
+        animation: fadeIn 1.5s ease forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 42px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        background: linear-gradient(
+          90deg,
+          #ff9a9e,
+          #fad0c4,
+          #fbc2eb,
+          #a18cd1,
+          #ff9a9e
+        );
+        background-size: 300% 300%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        animation: glowGradient 6s ease infinite;
+        text-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+      }
+
+      @keyframes glowGradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      label {
+        font-weight: 600;
+        color: #fff0f5;
+      }
+
+      input,
+      select,
+      textarea {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        font-size: 15px;
+        font-family: "Poppins", sans-serif;
+        color: #333;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+
+      .btn {
+        padding: 12px;
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+      }
+
+      .primary {
+        background: #ad1457;
+        color: #fff;
+      }
+
+      .secondary {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border: 1px solid #fff;
+      }
+
+      .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 768px) {
+        main.container {
+          margin: 20px;
+          padding: 20px;
+        }
+        h1 {
+          font-size: 32px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <a href="index.html">Laman Utama</a>
+      <a href="option.html" class="active">Profil</a>
+      <a href="menstrual.html">Kalendar Haid</a>
+      <a href="history.html">Sejarah</a>
+      <a href="about.html">Tentang Kami</a>
+      <a href="video.html">Info</a>
+    </nav>
+
+    <main class="container">
+      <h1>Maklumat Peribadi</h1>
+
+      <form id="personalForm">
+        <label>Nama:</label>
+        <input type="text" placeholder="Nama penuh" required />
+
+        <label>Umur:</label>
+        <input type="number" placeholder="Umur" required />
+
+        <label>Umur Menarche (haid pertama):</label>
+        <input type="number" placeholder="Contoh: 12" required />
+
+        <label>Kitaran Haid:</label>
+        <select required>
+          <option value="">-- Pilih --</option>
+          <option value="tetap">Tetap</option>
+          <option value="tidak tetap">Tidak Tetap</option>
+        </select>
+
+        <label>Hari Setiap Kitaran:</label>
+        <input type="number" placeholder="Contoh: 28" />
+
+        <label>Hari Aliran Banyak:</label>
+        <input type="number" placeholder="Contoh: 3" />
+
+        <label>Tinggi (cm):</label>
+        <input type="number" id="tinggi" />
+
+        <label>Berat (kg):</label>
+        <input type="number" id="berat" />
+
+        <label>BMI:</label>
+        <input type="text" id="bmi" readonly />
+
+        <label>Masalah/Abnormaliti:</label>
+        <textarea
+          placeholder="Contoh: Pendarahan berat, sakit teruk semasa haid..."
+        ></textarea>
+
+        <button type="button" class="btn primary" onclick="kiraBMI()">
+          Kira BMI
+        </button>
+        <button type="submit" class="btn secondary">Simpan Maklumat</button>
+      </form>
+    </main>
+
+    <script>
+      function kiraBMI() {
+        let berat = parseFloat(document.getElementById("berat").value);
+        let tinggi = parseFloat(document.getElementById("tinggi").value) / 100;
+        if (!berat || !tinggi)
+          return alert("Sila isi berat dan tinggi terlebih dahulu.");
+        let bmi = (berat / (tinggi * tinggi)).toFixed(2);
+        document.getElementById("bmi").value = bmi;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sejarah Haid & Solat - WARDA</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap");
+
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        color: #fff;
+        background: linear-gradient(135deg, #ff80ab, #f48fb1, #ba68c8, #ad1457);
+        background-size: 300% 300%;
+        animation: bgMove 10s ease infinite;
+        min-height: 100vh;
+      }
+
+      @keyframes bgMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        padding: 16px;
+        background: rgba(173, 20, 87, 0.85);
+        font-weight: 600;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .navbar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        transition: 0.3s;
+      }
+
+      .navbar a:hover,
+      .navbar a.active {
+        text-decoration: underline;
+        color: #ffeef3;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 38px;
+        font-weight: 800;
+        margin-top: 30px;
+        background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        animation: glowGradient 6s ease infinite;
+      }
+
+      @keyframes glowGradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      h2 {
+        font-size: 22px;
+        color: #ffeef3;
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .content {
+        max-width: 950px;
+        margin: 20px auto 50px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 25px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 1.3s ease forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #patientInfoBox {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 18px;
+        border-radius: 12px;
+        color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 25px;
+      }
+
+      #patientInfoBox p {
+        margin: 6px 0;
+      }
+
+      .controls {
+        margin: 15px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      select,
+      button {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: none;
+        font-family: "Poppins";
+        font-size: 15px;
+      }
+
+      select {
+        background: rgba(255, 255, 255, 0.85);
+        color: #333;
+      }
+
+      button {
+        background: #ad1457;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: rgba(255, 255, 255, 0.85);
+        color: #333;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background: #ad1457;
+        color: white;
+      }
+
+      tr:hover {
+        background: #f9e2eb;
+      }
+
+      .export-btn,
+      .reset-btn {
+        margin-top: 20px;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .export-btn {
+        background: #16a34a;
+        color: white;
+      }
+
+      .export-btn:hover {
+        background: #15803d;
+      }
+
+      .reset-btn {
+        background: #dc2626;
+        color: white;
+        margin-left: 10px;
+      }
+
+      .reset-btn:hover {
+        background: #b91c1c;
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          padding: 15px;
+          margin: 10px;
+        }
+
+        h1 {
+          font-size: 30px;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <a href="index.html">Laman Utama</a>
+      <a href="option.html">Profil</a>
+      <a href="menstrual.html">Kalendar Haid</a>
+      <a href="history.html" class="active">Sejarah</a>
+      <a href="about.html">Tentang Kami</a>
+      <a href="video.html">Info</a>
+    </div>
+
+    <h1>📖 Sejarah Haid & Solat</h1>
+
+    <div class="content">
+      <h2>🧾 Maklumat Peribadi Pesakit</h2>
+      <div id="patientInfoBox">
+        <p><b>Nama:</b> <span id="pName">-</span></p>
+        <p><b>Umur:</b> <span id="pAge">-</span></p>
+        <p><b>Umur Menarche:</b> <span id="pMenarche">-</span></p>
+        <p><b>Jenis Kitaran:</b> <span id="pCycleType">-</span></p>
+        <p><b>Hari Kitaran:</b> <span id="pCycle">-</span></p>
+        <p><b>Hari Aliran Deras:</b> <span id="pHeavyFlow">-</span></p>
+        <p><b>Berat:</b> <span id="pWeight">-</span> kg</p>
+        <p><b>Tinggi:</b> <span id="pHeight">-</span> cm</p>
+        <p><b>BMI:</b> <span id="pBMI">-</span></p>
+        <p><b>Abnormaliti:</b> <span id="pAbn">-</span></p>
+        <p>
+          <i
+            ><small>Disimpan pada: <span id="pDate">-</span></small></i
+          >
+        </p>
+      </div>
+
+      <!-- Filter -->
+      <div class="controls">
+        <label for="monthFilter">Bulan:</label>
+        <select id="monthFilter">
+          <option value="">Semua</option>
+          <option value="1">Januari</option>
+          <option value="2">Februari</option>
+          <option value="3">Mac</option>
+          <option value="4">April</option>
+          <option value="5">Mei</option>
+          <option value="6">Jun</option>
+          <option value="7">Julai</option>
+          <option value="8">Ogos</option>
+          <option value="9">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Disember</option>
+        </select>
+
+        <label for="yearFilter">Tahun:</label>
+        <select id="yearFilter">
+          <option value="">Semua</option>
+        </select>
+        <button onclick="loadHistory()">Tapis</button>
+      </div>
+
+      <!-- History Table -->
+      <table id="historyTable">
+        <thead>
+          <tr>
+            <th>Tarikh</th>
+            <th>Waktu Solat</th>
+            <th>Jenis Pendarahan</th>
+            <th>Warna Darah</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div style="margin-top: 15px">
+        <button class="export-btn" onclick="exportCSV()">
+          💾 Export ke CSV
+        </button>
+        <button class="reset-btn" onclick="resetPatientInfo()">
+          🗑 Reset Maklumat Peribadi
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function populateYearOptions() {
+        const yearFilter = document.getElementById("yearFilter");
+        const thisYear = new Date().getFullYear();
+        for (let y = thisYear - 5; y <= thisYear + 5; y++) {
+          let opt = document.createElement("option");
+          opt.value = y;
+          opt.textContent = y;
+          yearFilter.appendChild(opt);
+        }
+      }
+
+      function loadPatientInfo() {
+        let patient = JSON.parse(localStorage.getItem("patientInfo"));
+        if (patient) {
+          document.getElementById("pName").textContent = patient.name;
+          document.getElementById("pAge").textContent = patient.age;
+          document.getElementById("pMenarche").textContent = patient.menarche;
+          document.getElementById("pCycleType").textContent = patient.cycleType;
+          document.getElementById("pCycle").textContent = patient.cycle;
+          document.getElementById("pHeavyFlow").textContent =
+            patient.heavy_flow || "-";
+          document.getElementById("pWeight").textContent = patient.weight;
+          document.getElementById("pHeight").textContent = patient.height;
+          document.getElementById("pBMI").textContent = patient.bmi;
+          document.getElementById("pAbn").textContent =
+            patient.abnormalities || "-";
+          document.getElementById("pDate").textContent = patient.dateSaved;
+        }
+      }
+
+      function loadHistory() {
+        const tbody = document.querySelector("#historyTable tbody");
+        tbody.innerHTML = "";
+        const month = document.getElementById("monthFilter").value;
+        const year = document.getElementById("yearFilter").value;
+
+        let records = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          let key = localStorage.key(i);
+          if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(key)) {
+            let [day, m, y] = key.split("-");
+            if ((month === "" || m === month) && (year === "" || y === year)) {
+              let record = JSON.parse(localStorage.getItem(key));
+              records.push({
+                date: key,
+                d: parseInt(day),
+                m: parseInt(m),
+                y: parseInt(y),
+                record,
+              });
+            }
+          }
+        }
+
+        records.sort(
+          (a, b) => new Date(a.y, a.m - 1, a.d) - new Date(b.y, b.m - 1, b.d)
+        );
+
+        records.forEach((r) => {
+          let tr = document.createElement("tr");
+          tr.innerHTML = `<td>${r.date}</td>
+                          <td>${(r.record.prayers || []).join(", ")}</td>
+                          <td>${r.record.bleeding || "-"}</td>
+                          <td>${r.record.color || "-"}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function exportCSV() {
+        let rows = [
+          ["Tarikh", "Waktu Solat", "Jenis Pendarahan", "Warna Darah"],
+        ];
+        let records = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          let key = localStorage.key(i);
+          if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(key)) {
+            let [day, m, y] = key.split("-");
+            let record = JSON.parse(localStorage.getItem(key));
+            records.push({
+              date: key,
+              d: parseInt(day),
+              m: parseInt(m),
+              y: parseInt(y),
+              record,
+            });
+          }
+        }
+
+        records.sort(
+          (a, b) => new Date(a.y, a.m - 1, a.d) - new Date(b.y, b.m - 1, b.d)
+        );
+
+        records.forEach((r) => {
+          rows.push([
+            r.date,
+            (r.record.prayers || []).join("; "),
+            r.record.bleeding || "",
+            r.record.color || "",
+          ]);
+        });
+
+        let csvContent = rows.map((e) => e.join(",")).join("\n");
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "sejarah_haid.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function resetPatientInfo() {
+        if (confirm("Adakah anda pasti ingin padam semua maklumat peribadi?")) {
+          localStorage.removeItem("patientInfo");
+          alert("Maklumat peribadi telah dipadam.");
+          loadPatientInfo();
+        }
+      }
+
+      populateYearOptions();
+      loadPatientInfo();
+      loadHistory();
+    </script>
+  </body>
+</html>

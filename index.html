@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KALENDAR HAID - WARDA</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap");
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes waveMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes glowGradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        color: white;
+        min-height: 100vh;
+        position: relative;
+        background: url("warda cover_page-0001.jpg") no-repeat center center /
+          cover;
+        overflow-y: auto;
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 64, 129, 0.5),
+          rgba(156, 39, 176, 0.45),
+          rgba(255, 111, 97, 0.55)
+        );
+        background-size: 200% 200%;
+        animation: waveMove 10s ease-in-out infinite;
+        z-index: 0;
+      }
+
+      body::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
+        padding: 16px;
+        background: rgba(173, 20, 87, 0.85);
+        font-weight: 600;
+        position: relative;
+        z-index: 3;
+        backdrop-filter: blur(6px);
+        animation: fadeIn 1s ease forwards;
+      }
+
+      .navbar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        transition: color 0.3s ease;
+      }
+      .navbar a:hover,
+      .navbar a.active {
+        text-decoration: underline;
+        color: #ffeef3;
+      }
+
+      .container {
+        position: relative;
+        z-index: 3;
+        min-height: calc(100vh - 100px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 40px 20px 100px;
+        animation: fadeIn 1.5s ease forwards;
+      }
+
+      h1 {
+        font-size: 56px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        background: linear-gradient(
+          90deg,
+          #ff9a9e,
+          #fad0c4,
+          #fbc2eb,
+          #a18cd1,
+          #ff9a9e
+        );
+        background-size: 300% 300%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        animation: glowGradient 6s ease infinite;
+      }
+
+      h1 span {
+        background: linear-gradient(90deg, #ffffff, #ffd6e7, #ff9a9e, #ffffff);
+        background-size: 200% auto;
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        animation: waveMove 4s linear infinite;
+      }
+
+      p {
+        font-size: 20px;
+        color: #fce4ec;
+        margin-top: 6px;
+      }
+
+      .arabic {
+        font-size: 24px;
+        margin-top: 25px;
+        font-weight: 600;
+        direction: rtl;
+        color: #fff8f9;
+      }
+
+      .translation {
+        max-width: 800px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-top: 10px;
+        line-height: 1.6;
+        font-size: 18px;
+        color: #ffeaf1;
+      }
+
+      .disclaimer {
+        margin-top: 40px;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 18px 25px;
+        border-radius: 12px;
+        max-width: 900px;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #fff7fa;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 38px;
+        }
+        p {
+          font-size: 16px;
+        }
+        .arabic {
+          font-size: 20px;
+        }
+        .translation,
+        .disclaimer {
+          font-size: 14px;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <a href="index.html" class="active">Laman Utama</a>
+      <a href="option.html">Profil</a>
+      <a href="menstrual.html">Kalendar Haid</a>
+      <a href="history.html">Sejarah</a>
+      <a href="about.html">Tentang Kami</a>
+      <a href="video.html">Info</a>
+    </nav>
+
+    <main class="container">
+      <h1>LAMAN WEB <span>WARDA</span></h1>
+      <p><em>"Track with ease, Pray with peace"</em></p>
+
+      <div class="arabic">
+        هي الدم الزائد على اكثر الحيض والنفاس او هي الدم الخارج من غير أيام
+        الحيض والنفاس
+      </div>
+      <div class="translation">
+        <strong>Maksudnya:</strong> Darah yang keluar melebihi tempoh
+        sebanyak-banyak haid dan nifas atau darah yang keluar bukan pada
+        hari-hari haid dan nifas.
+      </div>
+
+      <div class="disclaimer">
+        <strong>Penafian:</strong> Maklumat peribadi anda tidak akan disimpan
+        oleh kami dan data anda akan hilang sekiranya anda menekan butang
+        <em>reset</em>.
+      </div>
+    </main>
+  </body>
+</html>
