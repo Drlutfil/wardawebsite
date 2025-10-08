@@ -44,7 +44,6 @@
       .navbar a {
         color: #fff;
         text-decoration: none;
-        font-size: 16px;
         transition: 0.3s;
       }
 
@@ -77,13 +76,6 @@
         100% {
           background-position: 0% 50%;
         }
-      }
-
-      h2 {
-        font-size: 22px;
-        color: #ffeef3;
-        margin-top: 30px;
-        text-align: center;
       }
 
       .content {
@@ -142,7 +134,6 @@
         background: rgba(255, 255, 255, 0.85);
         color: #333;
       }
-
       button {
         background: #ad1457;
         color: #fff;
@@ -177,7 +168,6 @@
         background: #ad1457;
         color: white;
       }
-
       tr:hover {
         background: #f9e2eb;
       }
@@ -197,7 +187,6 @@
         background: #16a34a;
         color: white;
       }
-
       .export-btn:hover {
         background: #15803d;
       }
@@ -207,7 +196,6 @@
         color: white;
         margin-left: 10px;
       }
-
       .reset-btn:hover {
         background: #b91c1c;
       }
@@ -217,11 +205,9 @@
           padding: 15px;
           margin: 10px;
         }
-
         h1 {
           font-size: 30px;
         }
-
         .controls {
           flex-direction: column;
           align-items: flex-start;
@@ -252,8 +238,8 @@
         <p><b>Jenis Kitaran:</b> <span id="pCycleType">-</span></p>
         <p><b>Hari Kitaran:</b> <span id="pCycle">-</span></p>
         <p><b>Hari Aliran Deras:</b> <span id="pHeavyFlow">-</span></p>
-        <p><b>Berat:</b> <span id="pWeight">-</span> kg</p>
         <p><b>Tinggi:</b> <span id="pHeight">-</span> cm</p>
+        <p><b>Berat:</b> <span id="pWeight">-</span> kg</p>
         <p><b>BMI:</b> <span id="pBMI">-</span></p>
         <p><b>Abnormaliti:</b> <span id="pAbn">-</span></p>
         <p>
@@ -289,7 +275,6 @@
         <button onclick="loadHistory()">Tapis</button>
       </div>
 
-      <!-- History Table -->
       <table id="historyTable">
         <thead>
           <tr>
@@ -317,7 +302,7 @@
         const yearFilter = document.getElementById("yearFilter");
         const thisYear = new Date().getFullYear();
         for (let y = thisYear - 5; y <= thisYear + 5; y++) {
-          let opt = document.createElement("option");
+          const opt = document.createElement("option");
           opt.value = y;
           opt.textContent = y;
           yearFilter.appendChild(opt);
@@ -325,21 +310,27 @@
       }
 
       function loadPatientInfo() {
-        let patient = JSON.parse(localStorage.getItem("patientInfo"));
-        if (patient) {
-          document.getElementById("pName").textContent = patient.name;
-          document.getElementById("pAge").textContent = patient.age;
-          document.getElementById("pMenarche").textContent = patient.menarche;
-          document.getElementById("pCycleType").textContent = patient.cycleType;
-          document.getElementById("pCycle").textContent = patient.cycle;
-          document.getElementById("pHeavyFlow").textContent =
-            patient.heavy_flow || "-";
-          document.getElementById("pWeight").textContent = patient.weight;
-          document.getElementById("pHeight").textContent = patient.height;
-          document.getElementById("pBMI").textContent = patient.bmi;
-          document.getElementById("pAbn").textContent =
-            patient.abnormalities || "-";
-          document.getElementById("pDate").textContent = patient.dateSaved;
+        const data = JSON.parse(localStorage.getItem("patientInfo"));
+        if (data) {
+          document.getElementById("pName").textContent = data.nama;
+          document.getElementById("pAge").textContent = data.umur;
+          document.getElementById("pMenarche").textContent = data.menarche;
+          document.getElementById("pCycleType").textContent = data.kitaran;
+          document.getElementById("pCycle").textContent = data.hariKitaran;
+          document.getElementById("pHeavyFlow").textContent = data.hariBanyak;
+          document.getElementById("pWeight").textContent = data.berat;
+          document.getElementById("pHeight").textContent = data.tinggi;
+          document.getElementById("pBMI").textContent = data.bmi;
+          document.getElementById("pAbn").textContent = data.masalah || "-";
+          document.getElementById("pDate").textContent = data.dateSaved;
+        }
+      }
+
+      function resetPatientInfo() {
+        if (confirm("Padam semua maklumat peribadi?")) {
+          localStorage.removeItem("patientInfo");
+          alert("Maklumat peribadi telah dipadam.");
+          location.reload();
         }
       }
 
@@ -372,7 +363,7 @@
         );
 
         records.forEach((r) => {
-          let tr = document.createElement("tr");
+          const tr = document.createElement("tr");
           tr.innerHTML = `<td>${r.date}</td>
                           <td>${(r.record.prayers || []).join(", ")}</td>
                           <td>${r.record.bleeding || "-"}</td>
@@ -382,7 +373,7 @@
       }
 
       function exportCSV() {
-        let rows = [
+        const rows = [
           ["Tarikh", "Waktu Solat", "Jenis Pendarahan", "Warna Darah"],
         ];
         let records = [];
@@ -391,19 +382,9 @@
           if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(key)) {
             let [day, m, y] = key.split("-");
             let record = JSON.parse(localStorage.getItem(key));
-            records.push({
-              date: key,
-              d: parseInt(day),
-              m: parseInt(m),
-              y: parseInt(y),
-              record,
-            });
+            records.push({ date: key, record });
           }
         }
-
-        records.sort(
-          (a, b) => new Date(a.y, a.m - 1, a.d) - new Date(b.y, b.m - 1, b.d)
-        );
 
         records.forEach((r) => {
           rows.push([
@@ -414,24 +395,14 @@
           ]);
         });
 
-        let csvContent = rows.map((e) => e.join(",")).join("\n");
-        const blob = new Blob([csvContent], {
-          type: "text/csv;charset=utf-8;",
-        });
+        const csv = rows.map((e) => e.join(",")).join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
         a.download = "sejarah_haid.csv";
         a.click();
         URL.revokeObjectURL(url);
-      }
-
-      function resetPatientInfo() {
-        if (confirm("Adakah anda pasti ingin padam semua maklumat peribadi?")) {
-          localStorage.removeItem("patientInfo");
-          alert("Maklumat peribadi telah dipadam.");
-          loadPatientInfo();
-        }
       }
 
       populateYearOptions();
