@@ -45,15 +45,13 @@
         padding: 16px;
         background: rgba(173, 20, 87, 0.85);
         font-weight: 600;
-        backdrop-filter: blur(5px);
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(6px);
       }
 
       .navbar a {
         color: #fff;
         text-decoration: none;
-        font-size: 16px;
-        transition: color 0.3s ease;
+        transition: 0.3s;
       }
 
       .navbar a:hover,
@@ -64,55 +62,32 @@
 
       main.container {
         flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        flex-direction: column;
         max-width: 600px;
         margin: 40px auto;
-        padding: 20px 30px;
+        padding: 25px 30px;
         background: rgba(255, 255, 255, 0.15);
         border-radius: 20px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         backdrop-filter: blur(8px);
-        animation: fadeIn 1.5s ease forwards;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       }
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
+      /* Tajuk dengan gradient text */
       h1 {
         text-align: center;
-        font-size: 42px;
+        font-size: 38px;
         font-weight: 800;
         margin-bottom: 20px;
         letter-spacing: 1px;
-        background: linear-gradient(
-          90deg,
-          #ff9a9e,
-          #fad0c4,
-          #fbc2eb,
-          #a18cd1,
-          #ff9a9e
-        );
-        background-size: 300% 300%;
+        background: linear-gradient(90deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+        background-size: 200% auto;
+        color: transparent;
         background-clip: text;
         -webkit-background-clip: text;
-        color: transparent;
         -webkit-text-fill-color: transparent;
-        animation: glowGradient 6s ease infinite;
-        text-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        animation: textShimmer 6s ease infinite;
       }
 
-      @keyframes glowGradient {
+      @keyframes textShimmer {
         0% {
           background-position: 0% 50%;
         }
@@ -125,7 +100,6 @@
       }
 
       form {
-        width: 100%;
         display: flex;
         flex-direction: column;
         gap: 12px;
@@ -139,37 +113,31 @@
       input,
       select,
       textarea {
-        padding: 10px 14px;
+        padding: 10px;
         border-radius: 8px;
         border: none;
-        outline: none;
-        font-size: 15px;
-        font-family: "Poppins", sans-serif;
-        color: #333;
         background: rgba(255, 255, 255, 0.9);
+        color: #333;
+        font-size: 15px;
       }
 
       textarea {
-        min-height: 80px;
         resize: vertical;
       }
 
       .btn {
         padding: 12px;
-        border: none;
         border-radius: 30px;
-        font-size: 16px;
         font-weight: 600;
         cursor: pointer;
+        border: none;
         transition: all 0.3s ease;
-        margin-top: 10px;
       }
 
       .primary {
         background: #ad1457;
         color: #fff;
       }
-
       .secondary {
         background: rgba(255, 255, 255, 0.2);
         color: #fff;
@@ -181,13 +149,33 @@
         transform: translateY(-2px);
       }
 
+      /* Paparan profil */
+      .profile-box {
+        display: none;
+        background: rgba(255, 255, 255, 0.25);
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 25px;
+        color: #fff;
+      }
+
+      .profile-box h2 {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 15px;
+      }
+
+      .profile-box p {
+        margin: 6px 0;
+      }
+
       @media (max-width: 768px) {
         main.container {
           margin: 20px;
           padding: 20px;
         }
         h1 {
-          font-size: 32px;
+          font-size: 30px;
         }
       }
     </style>
@@ -206,28 +194,29 @@
     <main class="container">
       <h1>Maklumat Peribadi</h1>
 
+      <!-- Borang isi maklumat -->
       <form id="personalForm">
         <label>Nama:</label>
-        <input type="text" placeholder="Nama penuh" required />
+        <input type="text" id="nama" required />
 
         <label>Umur:</label>
-        <input type="number" placeholder="Umur" required />
+        <input type="number" id="umur" required />
 
         <label>Umur Menarche (haid pertama):</label>
-        <input type="number" placeholder="Contoh: 12" required />
+        <input type="number" id="menarche" required />
 
         <label>Kitaran Haid:</label>
-        <select required>
+        <select id="kitaran" required>
           <option value="">-- Pilih --</option>
-          <option value="tetap">Tetap</option>
-          <option value="tidak tetap">Tidak Tetap</option>
+          <option value="Tetap">Tetap</option>
+          <option value="Tidak Tetap">Tidak Tetap</option>
         </select>
 
         <label>Hari Setiap Kitaran:</label>
-        <input type="number" placeholder="Contoh: 28" />
+        <input type="number" id="hariKitaran" />
 
         <label>Hari Aliran Banyak:</label>
-        <input type="number" placeholder="Contoh: 3" />
+        <input type="number" id="hariBanyak" />
 
         <label>Tinggi (cm):</label>
         <input type="number" id="tinggi" />
@@ -239,26 +228,100 @@
         <input type="text" id="bmi" readonly />
 
         <label>Masalah/Abnormaliti:</label>
-        <textarea
-          placeholder="Contoh: Pendarahan berat, sakit teruk semasa haid..."
-        ></textarea>
+        <textarea id="masalah"></textarea>
 
         <button type="button" class="btn primary" onclick="kiraBMI()">
           Kira BMI
         </button>
         <button type="submit" class="btn secondary">Simpan Maklumat</button>
       </form>
+
+      <!-- Paparan profil pengguna -->
+      <div class="profile-box" id="profileBox">
+        <h2>Profil Pengguna</h2>
+        <p><b>Nama:</b> <span id="pNama"></span></p>
+        <p><b>Umur:</b> <span id="pUmur"></span></p>
+        <p><b>Umur Menarche:</b> <span id="pMenarche"></span></p>
+        <p><b>Kitaran Haid:</b> <span id="pKitaran"></span></p>
+        <p><b>Hari Setiap Kitaran:</b> <span id="pHariKitaran"></span></p>
+        <p><b>Hari Aliran Banyak:</b> <span id="pHariBanyak"></span></p>
+        <p><b>Tinggi:</b> <span id="pTinggi"></span> cm</p>
+        <p><b>Berat:</b> <span id="pBerat"></span> kg</p>
+        <p><b>BMI:</b> <span id="pBmi"></span></p>
+        <p><b>Masalah/Abnormaliti:</b> <span id="pMasalah"></span></p>
+        <p>
+          <i
+            ><small>Disimpan pada: <span id="pTarikh"></span></small
+          ></i>
+        </p>
+        <button onclick="resetProfile()" class="btn primary">
+          Reset Maklumat
+        </button>
+      </div>
     </main>
 
     <script>
       function kiraBMI() {
-        let berat = parseFloat(document.getElementById("berat").value);
-        let tinggi = parseFloat(document.getElementById("tinggi").value) / 100;
-        if (!berat || !tinggi)
-          return alert("Sila isi berat dan tinggi terlebih dahulu.");
-        let bmi = (berat / (tinggi * tinggi)).toFixed(2);
+        const berat = parseFloat(document.getElementById("berat").value);
+        const tinggi =
+          parseFloat(document.getElementById("tinggi").value) / 100;
+        if (!berat || !tinggi) return alert("Sila isi berat dan tinggi.");
+        const bmi = (berat / (tinggi * tinggi)).toFixed(2);
         document.getElementById("bmi").value = bmi;
       }
+
+      document
+        .getElementById("personalForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const data = {
+            nama: document.getElementById("nama").value,
+            umur: document.getElementById("umur").value,
+            menarche: document.getElementById("menarche").value,
+            kitaran: document.getElementById("kitaran").value,
+            hariKitaran: document.getElementById("hariKitaran").value,
+            hariBanyak: document.getElementById("hariBanyak").value,
+            tinggi: document.getElementById("tinggi").value,
+            berat: document.getElementById("berat").value,
+            bmi: document.getElementById("bmi").value,
+            masalah: document.getElementById("masalah").value,
+            dateSaved: new Date().toLocaleString(),
+          };
+
+          localStorage.setItem("patientInfo", JSON.stringify(data));
+          showProfile();
+        });
+
+      function showProfile() {
+        const data = JSON.parse(localStorage.getItem("patientInfo"));
+        if (data) {
+          document.getElementById("personalForm").style.display = "none";
+          document.getElementById("profileBox").style.display = "block";
+
+          document.getElementById("pNama").textContent = data.nama;
+          document.getElementById("pUmur").textContent = data.umur;
+          document.getElementById("pMenarche").textContent = data.menarche;
+          document.getElementById("pKitaran").textContent = data.kitaran;
+          document.getElementById("pHariKitaran").textContent =
+            data.hariKitaran;
+          document.getElementById("pHariBanyak").textContent = data.hariBanyak;
+          document.getElementById("pTinggi").textContent = data.tinggi;
+          document.getElementById("pBerat").textContent = data.berat;
+          document.getElementById("pBmi").textContent = data.bmi;
+          document.getElementById("pMasalah").textContent = data.masalah || "-";
+          document.getElementById("pTarikh").textContent = data.dateSaved;
+        }
+      }
+
+      function resetProfile() {
+        if (confirm("Padam semua maklumat peribadi?")) {
+          localStorage.removeItem("patientInfo");
+          location.reload();
+        }
+      }
+
+      window.onload = showProfile;
     </script>
   </body>
 </html>
