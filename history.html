@@ -221,7 +221,7 @@
     <div class="navbar">
       <a href="index.html">Laman Utama</a>
       <a href="option.html">Profil</a>
-      <a href="menstrual.html">Kalendar Haid</a>
+      <a href="calendar.html">Kalendar Haid</a>
       <a href="history.html" class="active">Sejarah</a>
       <a href="about.html">Tentang Kami</a>
       <a href="video.html">Info</a>
@@ -282,6 +282,7 @@
             <th>Waktu Solat</th>
             <th>Jenis Pendarahan</th>
             <th>Warna Darah</th>
+            <th>Jam</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -293,6 +294,13 @@
         </button>
         <button class="reset-btn" onclick="resetPatientInfo()">
           🗑 Reset Maklumat Peribadi
+        </button>
+        <button
+          class="reset-btn"
+          style="margin-left: 8px; background: #b91c1c"
+          onclick="resetCalendarHistory()"
+        >
+          🗑 Reset Rekod Kalendar
         </button>
       </div>
     </div>
@@ -334,6 +342,24 @@
         }
       }
 
+      function resetCalendarHistory() {
+        if (
+          !confirm(
+            "Padam semua rekod dari Kalendar? Tindakan ini tidak boleh Undone."
+          )
+        )
+          return;
+        const re = /^\d{1,2}-\d{1,2}-\d{4}$/;
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (re.test(k)) keys.push(k);
+        }
+        keys.forEach((k) => localStorage.removeItem(k));
+        alert("Semua rekod kalendar telah dipadam.");
+        loadHistory();
+      }
+
       function loadHistory() {
         const tbody = document.querySelector("#historyTable tbody");
         tbody.innerHTML = "";
@@ -364,10 +390,12 @@
 
         records.forEach((r) => {
           const tr = document.createElement("tr");
+          const hours = r.record.hours !== undefined ? r.record.hours : "-";
           tr.innerHTML = `<td>${r.date}</td>
                           <td>${(r.record.prayers || []).join(", ")}</td>
                           <td>${r.record.bleeding || "-"}</td>
-                          <td>${r.record.color || "-"}</td>`;
+                          <td>${r.record.color || "-"}</td>
+                          <td>${hours}</td>`;
           tbody.appendChild(tr);
         });
       }
@@ -392,6 +420,7 @@
             (r.record.prayers || []).join("; "),
             r.record.bleeding || "",
             r.record.color || "",
+            typeof r.record.hours !== "undefined" ? r.record.hours : "",
           ]);
         });
 
